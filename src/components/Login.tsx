@@ -10,7 +10,7 @@ export function Login() {
     password: "",
   });
 
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate(); // this is a hook from react-router-dom
   const [error, setError] = useState<string | null>(null);
 
@@ -36,29 +36,36 @@ export function Login() {
     }
   };
 
-  return (
-    <div>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          placeholder="youremail@hello.com"
-          onChange={handleChange}
-        />
+  const handleGoogleSignin = async () => {
+    await loginWithGoogle();
+  };
 
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          onChange={handleChange}
-          placeholder="********"
-        />
-        <button>Login</button>
-      </form>
-    </div>
+  return (
+    <>
+      <div>
+        {error && <p>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="youremail@hello.com"
+            onChange={handleChange}
+          />
+
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            onChange={handleChange}
+            placeholder="********"
+          />
+          <button>Login</button>
+        </form>
+        <button onClick={handleGoogleSignin}>Google Authentication</button>
+      </div>
+    </>
   );
 }
