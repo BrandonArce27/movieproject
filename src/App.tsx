@@ -7,7 +7,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <div className="bg-black h-screen text-black flex ">
+    <div className="bg-black min-h-screen text-black flex ">
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
