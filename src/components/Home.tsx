@@ -14,9 +14,14 @@ export function Home() {
   console.log("user");
   console.log(user); //revisar bien esto al final
 
-  const [movies, setMovies] = React.useState<Movies[]>([]);
   const apiKey = "72dee24b8ebdce73383391884778e2d7";
-  const popular = "https://api.themoviedb.org/3/movie/popular";
+  const api_url = "https://api.themoviedb.org/3";
+  const image_url = "https://image.tmdb.org/t/p/original";
+
+  //Variables de estado
+  const [movies, setMovies] = React.useState<Movies[]>([]);
+  const [search, setSearch] = React.useState("");
+  // const [movie, setMovie] = React.useState<Movies[]>([]); //sirve para cuanbdo se busca una pelicula, lo voy a utilizar para agregar a favoritos posiblemente
 
   const handleLogout = async () => {
     try {
@@ -26,15 +31,27 @@ export function Home() {
     }
   };
 
-  const fetchData = () => {
-    axios.get(`${popular}?api_key=${apiKey}`).then((response) => {
-      const result = response.data.results;
-      setMovies(result);
+  const fetchData = async (search: any) => {
+    const type = search ? "search" : "discover";
+    const {
+      data: { results },
+    } = await axios.get(`${api_url}/${type}/movie`, {
+      params: {
+        api_key: apiKey,
+        query: search,
+      },
     });
+    setMovies(results);
+  };
+
+  //funcion para buscar peliculas
+  const searchMovies = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    fetchData(search);
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(null);
   }, []);
 
   if (loading) return <h1>Loading...</h1>;
@@ -55,20 +72,24 @@ export function Home() {
             Logout
           </button>
         </div>
-        {/* Main content */}
+        <form onSubmit={searchMovies}>
+          <input
+            type="text"
+            placeholder="search"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button className="text-white">Buscar</button>
+        </form>
+        {/* Aqui se renderizan las pelis en tendencia si no se utiliza el search */}
         <h1 className="text-4xl font-bold text-white text-center mb-5">
           Peliculas en tendencia
         </h1>
         <div className="flex flex-wrap justify-center">
           {movies.map((items) => {
             return (
-              <div className=" text-white">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500/${items.poster_path}`}
-                  alt="movie"
-                />
+              <div className=" text-white" key={items.id}>
+                <img src={`${image_url}${items.poster_path}`} alt="movie" />
                 <p className="">{items.title}</p>
-                <p className="">{items.release_date}</p>
               </div>
             );
           })}
