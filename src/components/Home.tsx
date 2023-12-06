@@ -55,11 +55,12 @@ export function Home() {
   }, []);
 
   if (loading) return <h1>Loading...</h1>;
+
   return (
     <>
-      <div className="">
+      <div className="w-full">
         {/* Header */}
-        <div className="flex justify-between items-center bg-gray-800 text-white p-4">
+        <div className="flex justify-between items-center bg-gray-800 text-white p-4 mb-10">
           <div>
             <p className="text-white">
               Bienvenido: {user.displayName || user.email}
@@ -72,24 +73,34 @@ export function Home() {
             Logout
           </button>
         </div>
-        <form onSubmit={searchMovies}>
-          <input
-            type="text"
-            placeholder="search"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <button className="text-white">Buscar</button>
-        </form>
         {/* Aqui se renderizan las pelis en tendencia si no se utiliza el search */}
         <h1 className="text-4xl font-bold text-white text-center mb-5">
           Peliculas en tendencia
         </h1>
-        <div className="flex flex-wrap justify-center">
+        <form
+          onSubmit={searchMovies}
+          className="flex flex-col items-center justify-center"
+        >
+          <input
+            type="text"
+            placeholder="Buscar pelicula"
+            onChange={(e) => setSearch(e.target.value)}
+            className="mb-4"
+          />
+          <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 mb-5">
+            Buscar
+          </button>
+        </form>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {movies.map((items) => {
             return (
               <div className=" text-white" key={items.id}>
-                <img src={`${image_url}${items.poster_path}`} alt="movie" />
-                <p className="">{items.title}</p>
+                <img
+                  src={`${image_url}${items.poster_path}`}
+                  alt="movie"
+                  className="w-full h-100 object-cover"
+                />
+                <p className="mt-2">{items.title}</p>
               </div>
             );
           })}
