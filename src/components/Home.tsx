@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../context/authContext";
 import axios from "axios";
+import { doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 interface Movies {
   id: number;
@@ -48,6 +50,29 @@ export function Home() {
   const searchMovies = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     fetchData(search);
+  };
+
+  //funcion para agregar peliculas a favoritos
+  const addMovieToFavorites = async (movieId: number) => {
+    try {
+      // Obtén una referencia al documento del usuario en la colección "favorite-movies"
+      const docRef = doc(db, "favorite-movies", user?.email);
+
+      // Comprueba si el documento existe
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        // Si el documento no existe, utilice setDoc para crearlo
+        await setDoc(docRef, { idmovies: [movieId] });
+      } else {
+        // Si el documento existe, utilice updateDoc para agregar el ID de la película al campo 'idmovies'
+        await updateDoc(docRef, {
+          idmovies: arrayUnion(movieId),
+        });
+      }
+    } catch (error) {
+      console.error("Error adding movie to favorites: ", error);
+    }
   };
 
   useEffect(() => {
@@ -101,6 +126,12 @@ export function Home() {
                   className="w-full h-100 object-cover"
                 />
                 <p className="mt-2">{items.title}</p>
+                <button
+                  onClick={() => addMovieToFavorites(items.id)}
+                  className="text-white"
+                >
+                  Agregar peli a favoritos
+                </button>
               </div>
             );
           })}
