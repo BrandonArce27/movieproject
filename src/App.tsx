@@ -4,6 +4,7 @@ import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { AuthProvider } from "./context/authContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Favorites } from "./components/Favorites";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/favorites" element={<Favorites />} />
           <Route path="/register" element={<Register />} />
         </Routes>
       </AuthProvider>

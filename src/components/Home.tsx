@@ -3,6 +3,7 @@ import { useAuth } from "../context/authContext";
 import axios from "axios";
 import { doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 interface Movies {
   id: number;
@@ -13,6 +14,7 @@ interface Movies {
 
 export function Home() {
   const { logout, user, loading } = useAuth();
+  const navigate = useNavigate();
   console.log("user");
   console.log(user); //revisar bien esto al final
 
@@ -83,60 +85,65 @@ export function Home() {
 
   return (
     <>
-      <div className="w-full">
+      <main className="w-full">
         {/* Header */}
-        <div className="flex justify-between items-center bg-gray-800 text-white p-4 mb-10">
+        <header className="flex justify-between items-center bg-gray-800 text-white p-4 mb-10">
           <div>
             <p className="text-white">
               Bienvenido: {user.displayName || user.email}
             </p>
           </div>
+          <button onClick={() => navigate("/favorites")}>
+            Go to Favorites
+          </button>
           <button
             onClick={handleLogout}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
           >
             Logout
           </button>
-        </div>
+        </header>
         {/* Aqui se renderizan las pelis en tendencia si no se utiliza el search */}
-        <h1 className="text-4xl font-bold text-white text-center mb-5">
-          Peliculas en tendencia
-        </h1>
-        <form
-          onSubmit={searchMovies}
-          className="flex flex-col items-center justify-center"
-        >
-          <input
-            type="text"
-            placeholder="Buscar pelicula"
-            onChange={(e) => setSearch(e.target.value)}
-            className="mb-4"
-          />
-          <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 mb-5">
-            Buscar
-          </button>
-        </form>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {movies.map((items) => {
-            return (
-              <div className=" text-white" key={items.id}>
-                <img
-                  src={`${image_url}${items.poster_path}`}
-                  alt="movie"
-                  className="w-full h-100 object-cover"
-                />
-                <p className="mt-2">{items.title}</p>
-                <button
-                  onClick={() => addMovieToFavorites(items.id)}
-                  className="text-white"
-                >
-                  Agregar peli a favoritos
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+        <section>
+          <h1 className="text-4xl font-bold text-white text-center mb-5">
+            Peliculas en tendencia
+          </h1>
+          <form
+            onSubmit={searchMovies}
+            className="flex flex-col items-center justify-center"
+          >
+            <input
+              type="text"
+              placeholder="Buscar pelicula"
+              onChange={(e) => setSearch(e.target.value)}
+              className="mb-4"
+            />
+            <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 mb-5">
+              Buscar
+            </button>
+          </form>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {movies.map((items) => {
+              return (
+                <article className=" text-white" key={items.id}>
+                  <img
+                    src={`${image_url}${items.poster_path}`}
+                    alt="movie"
+                    className="w-full h-100 object-cover"
+                  />
+                  <p className="mt-2">{items.title}</p>
+                  <button
+                    onClick={() => addMovieToFavorites(items.id)}
+                    className="text-white"
+                  >
+                    Agregar peli a favoritos
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      </main>
     </>
   );
 }
