@@ -4,6 +4,7 @@ import axios from "axios";
 import { doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { FaStar } from "react-icons/fa";
 
 interface Movies {
   id: number;
@@ -81,6 +82,8 @@ export function Home() {
     fetchData(null);
   }, []);
 
+  const rating = 4; // de momento la puse igual a 4 todas, pero esto es meramente paraque sirvan las estrellas. tengo que darles funcionaidad con firebase.
+
   if (loading) return <h1>Loading...</h1>;
 
   return (
@@ -134,10 +137,28 @@ export function Home() {
                   <p className="mt-2">{items.title}</p>
                   <button
                     onClick={() => addMovieToFavorites(items.id)}
-                    className="text-white"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 "
                   >
                     Agregar peli a favoritos
                   </button>
+                  <div className="flex">
+                    {[...Array(5)].map((star, i) => {
+                      const ratingValue = i + 1;
+                      return (
+                        <label key={i}>
+                          <input
+                            type="radio"
+                            name={`rating-${items.id}`}
+                            value={ratingValue}
+                            className="hidden"
+                          />
+                          <FaStar
+                            color={ratingValue <= rating ? "yellow" : "gray"}
+                          />
+                        </label>
+                      );
+                    })}
+                  </div>
                 </article>
               );
             })}

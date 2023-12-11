@@ -44,7 +44,7 @@ export const Favorites: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {movies.map((movie) => (
         <div key={movie.id}>
           <h2>{movie.title}</h2>
