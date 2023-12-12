@@ -4,6 +4,7 @@ import { FormEvent } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "./Alert";
+import { Link } from "react-router-dom";
 
 export function Register() {
   const [user, setUser] = React.useState({
@@ -38,27 +39,65 @@ export function Register() {
   };
 
   return (
-    <div>
-      {error && <Alert message={error} />}
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          name="email"
-          placeholder="youremail@hello.com"
-          onChange={handleChange}
-        />
+    <>
+      <div className="w-full max-w-xs m-auto">
+        {error && <Alert message={error} />}
+        <h1 className="mb-5 text-6xl font-bold animate__animated animate__fadeInUp animate__delay-1s text-white">
+          Movie Project !!!!
+        </h1>
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        >
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="youremail@company.tld"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="*************"
+            />
+          </div>
 
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          onChange={handleChange}
-          placeholder="********"
-        />
-        <button>Register</button>
-      </form>
-    </div>
+          <div className="flex items-center justify-between">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 animate-spin"
+              type="submit"
+            >
+              Register
+            </button>
+          </div>
+        </form>
+        <p className="text-white my-4 text-sm flex justify-between px-3">
+          Already have an Account?
+          <Link to="/login" className="text-blue-700 hover:text-blue-900">
+            Login
+          </Link>
+        </p>
+      </div>
+    </>
   );
 }

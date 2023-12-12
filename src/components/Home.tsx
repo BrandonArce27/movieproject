@@ -1,10 +1,21 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../context/authContext";
 import axios from "axios";
-import { doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  getDoc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import Modal from "./Modal";
 
 interface Movies {
   id: number;
@@ -13,11 +24,23 @@ interface Movies {
   release_date: string;
 }
 
+export interface Movie {
+  id: string;
+  title: string;
+}
+
+export interface Review {
+  id: string;
+  movieId: string;
+  userEmail: string;
+  content: string;
+}
+
 export function Home() {
   const { logout, user, loading } = useAuth();
   const navigate = useNavigate();
-  console.log("user");
-  console.log(user); //revisar bien esto al final
+  // console.log("user");
+  // console.log(user); //revisar bien esto al final
 
   const apiKey = "72dee24b8ebdce73383391884778e2d7";
   const api_url = "https://api.themoviedb.org/3";
@@ -27,6 +50,9 @@ export function Home() {
   const [movies, setMovies] = React.useState<Movies[]>([]);
   const [search, setSearch] = React.useState("");
   // const [movie, setMovie] = React.useState<Movies[]>([]); //sirve para cuanbdo se busca una pelicula, lo voy a utilizar para agregar a favoritos posiblemente
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [selectedMovie, setSelectedMovie] = React.useState<Movie | null>(null);
+  const [reviews, setReviews] = React.useState<Review[]>([]);
 
   const handleLogout = async () => {
     try {
@@ -84,6 +110,43 @@ export function Home() {
 
   const rating = 4; // de momento la puse igual a 4 todas, pero esto es meramente paraque sirvan las estrellas. tengo que darles funcionaidad con firebase.
 
+  const handleOpenModal = (items: any) => {
+    console.log("handleOpenModal called with:", items);
+    setSelectedMovie(items);
+    console.log('selectedMovie after setSelectedMovie:', selectedMovie);
+    setIsModalOpen(true);
+    console.log('isModalOpen after setIsModalOpen:', isModalOpen);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMovie(null);
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    if (selectedMovie) {
+      const q = query(
+        collection(db, "reviews"),
+        where("movieId", "==", selectedMovie.id)
+      );
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const newReviews = snapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as Review)
+        );
+
+        setReviews(newReviews);
+      });
+
+      // Limpiar la suscripción al desmontar
+      return () => unsubscribe();
+    }
+  }, [selectedMovie]);
+
   if (loading) return <h1>Loading...</h1>;
 
   return (
@@ -135,6 +198,9 @@ export function Home() {
                     className="w-full h-100 object-cover"
                   />
                   <p className="mt-2">{items.title}</p>
+                  <button onClick={() => handleOpenModal(items)}>
+                    Agregar/Ver Reseñas
+                  </button>
                   <button
                     onClick={() => addMovieToFavorites(items.id)}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 "
@@ -162,6 +228,13 @@ export function Home() {
                 </article>
               );
             })}
+            {isModalOpen && selectedMovie && (
+              <Modal
+                movie={selectedMovie}
+                reviews={reviews}
+                onClose={handleCloseModal}
+              />
+            )}
           </div>
         </section>
       </main>

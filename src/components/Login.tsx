@@ -4,6 +4,7 @@ import { FormEvent } from "react";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "./Alert";
+import { Link } from "react-router-dom";
 
 export function Login() {
   const [user, setUser] = React.useState({
@@ -48,9 +49,9 @@ export function Login() {
 
   return (
     <>
-      <div className="w-full max-w-xs m-auto">
+      <div className="w-full max-w-xs m-auto ">
         {error && <Alert message={error} />}
-        <h1 className="text-6xl font-bold animate__animated animate__fadeInUp animate__delay-1s text-white">
+        <h1 className="text-6xl font-bold animate__animated animate__fadeInUp animate__delay-1s text-white mb-5">
           Movie Project !!!!
         </h1>
         <form
@@ -95,29 +96,22 @@ export function Login() {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 animate-spin"
               type="submit"
             >
-              Sign In
+              Login
             </button>
-            <a
-              className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-              href="#!"
-              // onClick={handleResetPassword}
-            >
-              Forgot Password?
-            </a>
           </div>
         </form>
+        <p className=" text-white my-4 text-sm flex justify-between px-3">
+          Don't have an account?
+          <Link to="/register" className="text-blue-700 hover:text-blue-900">
+            Register
+          </Link>
+        </p>
         <button
           onClick={handleGoogleSignin}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 animate-spin"
+          className="bg-slate-50 hover:bg-slate-200 text-black  shadow rounded border-2 border-gray-300 py-2 px-4 w-full"
         >
           Google login
         </button>
-        <p className="my-4 text-sm flex justify-between px-3">
-          Don't have an account?
-          {/* <Link to="/register" className="text-blue-700 hover:text-blue-900">
-          Register
-        </Link> */}
-        </p>
       </div>
     </>
   );
