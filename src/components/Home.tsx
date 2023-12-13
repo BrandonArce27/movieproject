@@ -14,8 +14,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
 import Modal from "./Modal";
+import Rating from "./Rating";
 
 interface Movies {
   id: number;
@@ -53,6 +53,7 @@ export function Home() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [selectedMovie, setSelectedMovie] = React.useState<Movie | null>(null);
   const [reviews, setReviews] = React.useState<Review[]>([]);
+  const [favoriteMovies, setFavoriteMovies] = React.useState<number[]>([]);
 
   const handleLogout = async () => {
     try {
@@ -81,24 +82,34 @@ export function Home() {
     fetchData(search);
   };
 
+  useEffect(() => {
+    const fetchFavoriteMovies = async () => {
+      const docRef = doc(db, "favorite-movies", user?.email);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setFavoriteMovies(docSnap.data().idmovies);
+      }
+    };
+
+    fetchFavoriteMovies();
+  }, [user]);
+
   //funcion para agregar peliculas a favoritos
   const addMovieToFavorites = async (movieId: number) => {
     try {
-      // Obtén una referencia al documento del usuario en la colección "favorite-movies"
       const docRef = doc(db, "favorite-movies", user?.email);
-
-      // Comprueba si el documento existe
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        // Si el documento no existe, utilice setDoc para crearlo
         await setDoc(docRef, { idmovies: [movieId] });
       } else {
-        // Si el documento existe, utilice updateDoc para agregar el ID de la película al campo 'idmovies'
         await updateDoc(docRef, {
           idmovies: arrayUnion(movieId),
         });
       }
+
+      setFavoriteMovies((prevMovies) => [...prevMovies, movieId]);
     } catch (error) {
       console.error("Error adding movie to favorites: ", error);
     }
@@ -108,14 +119,12 @@ export function Home() {
     fetchData(null);
   }, []);
 
-  const rating = 4; // de momento la puse igual a 4 todas, pero esto es meramente paraque sirvan las estrellas. tengo que darles funcionaidad con firebase.
-
   const handleOpenModal = (items: any) => {
     console.log("handleOpenModal called with:", items);
     setSelectedMovie(items);
-    console.log('selectedMovie after setSelectedMovie:', selectedMovie);
+    console.log("selectedMovie after setSelectedMovie:", selectedMovie);
     setIsModalOpen(true);
-    console.log('isModalOpen after setIsModalOpen:', isModalOpen);
+    console.log("isModalOpen after setIsModalOpen:", isModalOpen);
   };
 
   const handleCloseModal = () => {
@@ -201,30 +210,19 @@ export function Home() {
                   <button onClick={() => handleOpenModal(items)}>
                     Agregar/Ver Reseñas
                   </button>
-                  <button
-                    onClick={() => addMovieToFavorites(items.id)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 "
-                  >
-                    Agregar peli a favoritos
-                  </button>
-                  <div className="flex">
-                    {[...Array(5)].map((star, i) => {
-                      const ratingValue = i + 1;
-                      return (
-                        <label key={i}>
-                          <input
-                            type="radio"
-                            name={`rating-${items.id}`}
-                            value={ratingValue}
-                            className="hidden"
-                          />
-                          <FaStar
-                            color={ratingValue <= rating ? "yellow" : "gray"}
-                          />
-                        </label>
-                      );
-                    })}
-                  </div>
+                  {favoriteMovies.includes(items.id) ? (
+                    <button className="bg-green-500 text-white font-bold py-2 px-4 rounded">
+                      Película agregada a favoritos
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => addMovieToFavorites(items.id)}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+                    >
+                      Agregar peli a favoritos
+                    </button>
+                  )}
+                  <Rating movieId={items.id} />
                 </article>
               );
             })}
