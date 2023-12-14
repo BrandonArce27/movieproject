@@ -16,6 +16,7 @@ import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import Rating from "./Rating";
+import Header from "./Header";
 
 interface Movies {
   id: number;
@@ -161,68 +162,68 @@ export function Home() {
   return (
     <>
       <main className="w-full">
-        {/* Header */}
-        <header className="flex justify-between items-center bg-gray-800 text-white p-4 mb-10">
-          <div>
-            <p className="text-white">
-              Bienvenido: {user.displayName || user.email}
-            </p>
-          </div>
-          <button onClick={() => navigate("/favorites")}>
-            Go to Favorites
-          </button>
-          <button
-            onClick={handleLogout}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
-          >
-            Logout
-          </button>
-        </header>
-        {/* Aqui se renderizan las pelis en tendencia si no se utiliza el search */}
+        <Header user={user} handleLogout={handleLogout} />
         <section>
-          <h1 className="text-4xl font-bold text-white text-center mb-5">
-            Peliculas en tendencia
-          </h1>
           <form
             onSubmit={searchMovies}
-            className="flex flex-col items-center justify-center"
+            className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-md mx-auto transform transition duration-500 hover:scale-105"
           >
-            <input
-              type="text"
-              placeholder="Buscar pelicula"
-              onChange={(e) => setSearch(e.target.value)}
-              className="mb-4"
-            />
-            <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 mb-5">
-              Buscar
-            </button>
+            <h2 className="text-2xl font-bold mb-4 text-center">
+              Buscar Película
+            </h2>
+            <div className="flex w-full">
+              <input
+                type="text"
+                placeholder="Buscar pelicula"
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500"
+              />
+              <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded-r-lg transition duration-300 transform hover:scale-105">
+                Buscar
+              </button>
+            </div>
           </form>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <h1 className="text-4xl font-bold text-white text-center mb-5 mt-5">
+            Peliculas en tendencia
+          </h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
             {movies.map((items) => {
               return (
-                <article className=" text-white" key={items.id}>
+                <article
+                  className="relative bg-white rounded-lg shadow-md overflow-hidden text-black transform transition duration-500 hover:scale-105"
+                  key={items.id}
+                >
                   <img
                     src={`${image_url}${items.poster_path}`}
                     alt="movie"
-                    className="w-full h-100 object-cover"
+                    className="w-full h-auto object-cover"
                   />
-                  <p className="mt-2">{items.title}</p>
-                  <button onClick={() => handleOpenModal(items)}>
-                    Agregar/Ver Reseñas
-                  </button>
-                  {favoriteMovies.includes(items.id) ? (
-                    <button className="bg-green-500 text-white font-bold py-2 px-4 rounded">
-                      Película agregada a favoritos
-                    </button>
-                  ) : (
+                  <div className="p-4">
+                    <h2 className="font-bold text-lg">{items.title}</h2>
+                    <div style={{ position: "relative", zIndex: 1 }}>
+                      <Rating movieId={items.id} />
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
                     <button
-                      onClick={() => addMovieToFavorites(items.id)}
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+                      onClick={() => handleOpenModal(items)}
+                      className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
                     >
-                      Agregar peli a favoritos
+                      Agregar/Ver Reseñas
                     </button>
-                  )}
-                  <Rating movieId={items.id} />
+                    {favoriteMovies.includes(items.id) ? (
+                      <button className="mt-2 bg-green-500 text-white font-bold py-2 px-4 rounded">
+                        Película agregada a favoritos
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => addMovieToFavorites(items.id)}
+                        className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+                      >
+                        Agregar peli a favoritos
+                      </button>
+                    )}
+                  </div>
                 </article>
               );
             })}

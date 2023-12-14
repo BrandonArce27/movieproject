@@ -1,59 +1,74 @@
 import React, { useEffect, useState } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useAuth } from "../context/authContext";
 import axios from "axios";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../firebase";
+import Header from "./Header";
 
-type Movie = {
-  id: string;
+interface Movies {
+  id: number;
   title: string;
   poster_path: string;
-};
+  release_date: string;
+}
 
-export const Favorites: React.FC = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
+export function Favorites() {
+  const { user, logout } = useAuth();
+  const [favoriteMovies, setFavoriteMovies] = useState<Movies[]>([]);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
 
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && user.email) {
-        const userId = user.email;
-        const db = getFirestore();
-        const userDoc = doc(db, "favorite-movies", userId);
+    const fetchFavoriteMovies = async () => {
+      const docRef = doc(db, "favorite-movies", user?.email);
+      const docSnap = await getDoc(docRef);
 
-        getDoc(userDoc).then((docSnapshot) => {
-          if (docSnapshot.exists()) {
-            const movieIds = docSnapshot.data().idmovies || [];
-
-            Promise.all(
-              movieIds.map((id: string) =>
-                axios.get(
-                  `https://api.themoviedb.org/3/movie/${id}?api_key=72dee24b8ebdce73383391884778e2d7`
-                )
-              )
-            ).then((responses) => {
-              const movies = responses.map((response) => response.data);
-              setMovies(movies);
-            });
-          }
-        });
+      if (docSnap.exists()) {
+        const movieIds = docSnap.data().idmovies;
+        const movies = await Promise.all(
+          movieIds.map((id: number) =>
+            axios.get(`https://api.themoviedb.org/3/movie/${id}`, {
+              params: {
+                api_key: "72dee24b8ebdce73383391884778e2d7",
+              },
+            })
+          )
+        );
+        setFavoriteMovies(movies.map((response) => response.data));
       }
-    });
+    };
 
-    // Limpiar la suscripción al desmontar el componente
-    return () => unsubscribe();
-  }, []);
+    fetchFavoriteMovies();
+  }, [user]);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {movies.map((movie) => (
-        <div key={movie.id}>
-          <h2 className="text-white">{movie.title}</h2>
-          <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title}
-          />
-        </div>
-      ))}
-    </div>
+    <>
+      <main>
+        <Header user={user} handleLogout={handleLogout} />
+        <section>
+          <h1 className="text-4xl font-bold text-white text-center mb-5">
+            Peliculas Favoritas
+          </h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {favoriteMovies.map((movie) => (
+              <article className=" text-white" key={movie.id}>
+                <img
+                  src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                  alt="movie"
+                  className="w-full h-100 object-cover"
+                />
+                <p className="mt-2">{movie.title}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </main>
+    </>
   );
-};
+}
