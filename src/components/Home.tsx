@@ -121,11 +121,8 @@ export function Home() {
   }, []);
 
   const handleOpenModal = (items: any) => {
-    console.log("handleOpenModal called with:", items);
     setSelectedMovie(items);
-    console.log("selectedMovie after setSelectedMovie:", selectedMovie);
     setIsModalOpen(true);
-    console.log("isModalOpen after setIsModalOpen:", isModalOpen);
   };
 
   const handleCloseModal = () => {
@@ -190,7 +187,7 @@ export function Home() {
             {movies.map((items) => {
               return (
                 <article
-                  className="relative bg-white rounded-lg shadow-md overflow-hidden text-black transform transition duration-500 hover:scale-105"
+                  className="relative bg-white rounded-lg shadow-lg overflow-hidden text-black transform transition duration-500 hover:scale-105"
                   key={items.id}
                 >
                   <img

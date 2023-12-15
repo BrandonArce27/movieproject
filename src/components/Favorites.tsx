@@ -55,15 +55,20 @@ export function Favorites() {
           <h1 className="text-4xl font-bold text-white text-center mb-5">
             Peliculas Favoritas
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
             {favoriteMovies.map((movie) => (
-              <article className=" text-white" key={movie.id}>
+              <article
+                className="relative bg-white rounded-lg shadow-md overflow-hidden text-black transform transition duration-500 hover:scale-105"
+                key={movie.id}
+              >
                 <img
                   src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
                   alt="movie"
-                  className="w-full h-100 object-cover"
+                  className="w-full h-auto object-cover"
                 />
-                <p className="mt-2">{movie.title}</p>
+                <div className="p-4">
+                  <h2 className="font-bold text-lg">{movie.title}</h2>
+                </div>
               </article>
             ))}
           </div>
