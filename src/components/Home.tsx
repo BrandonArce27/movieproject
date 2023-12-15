@@ -13,7 +13,6 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import Rating from "./Rating";
 import Header from "./Header";
@@ -155,7 +154,7 @@ export function Home() {
 
   return (
     <>
-      <main className="w-full">
+      <main className="w-full font-poppins">
         <Header user={user} handleLogout={handleLogout} />
         <section>
           <form
@@ -187,11 +186,17 @@ export function Home() {
                   className="relative bg-white rounded-lg shadow-lg overflow-hidden text-black transform transition duration-500 hover:scale-105"
                   key={items.id}
                 >
-                  <img
-                    src={`${image_url}${items.poster_path}`}
-                    alt="movie"
-                    className="w-full h-auto object-cover"
-                  />
+                  {items.poster_path ? (
+                    <img
+                      src={`${image_url}${items.poster_path}`}
+                      alt="movie"
+                      className="w-full h-auto object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-auto bg-gray-300 flex items-center justify-center text-lg text-gray-700">
+                      Imagen no disponible
+                    </div>
+                  )}
                   <div className="p-4">
                     <h2 className="font-bold text-lg">{items.title}</h2>
                     <div style={{ position: "relative", zIndex: 1 }}>

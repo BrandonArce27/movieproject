@@ -60,11 +60,11 @@ const Rating: React.FC<RatingProps> = ({ movieId }) => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex justify-center">
       {[...Array(5)].map((star, i) => {
         const ratingValue = i + 1;
         return (
-          <label key={i}>
+          <label key={i} className="mx-1">
             <input
               type="radio"
               name={`rating-${movieId}`}
@@ -72,7 +72,10 @@ const Rating: React.FC<RatingProps> = ({ movieId }) => {
               className="hidden"
               onClick={() => handleRating(ratingValue)}
             />
-            <FaStar color={ratingValue <= (rating || 0) ? "yellow" : "gray"} />
+            <FaStar
+              size={30}
+              color={ratingValue <= (rating || 0) ? "#ffc107" : "gray"}
+            />
           </label>
         );
       })}
