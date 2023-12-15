@@ -39,9 +39,6 @@ export interface Review {
 
 export function Home() {
   const { logout, user, loading } = useAuth();
-  const navigate = useNavigate();
-  // console.log("user");
-  // console.log(user); //revisar bien esto al final
 
   const apiKey = "72dee24b8ebdce73383391884778e2d7";
   const api_url = "https://api.themoviedb.org/3";
@@ -163,7 +160,7 @@ export function Home() {
         <section>
           <form
             onSubmit={searchMovies}
-            className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-md mx-auto transform transition duration-500 hover:scale-105"
+            className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-md mx-auto transform transition duration-500 hover:scale-105 font-poppins"
           >
             <h2 className="text-2xl font-bold mb-4 text-center">
               Buscar Película
