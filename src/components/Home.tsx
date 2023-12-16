@@ -177,7 +177,7 @@ export function Home() {
             </div>
           </form>
           <h1 className="text-4xl font-bold text-white text-center mb-5 mt-5">
-            Peliculas en tendencia
+            Explora las peliculas del momento!!!!!
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
             {movies.map((items) => {

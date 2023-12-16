@@ -5,6 +5,7 @@ import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "./Alert";
 import { Link } from "react-router-dom";
+import "animate.css";
 
 export function Register() {
   const [user, setUser] = React.useState({
@@ -40,19 +41,19 @@ export function Register() {
 
   return (
     <>
-      <div className="w-full max-w-xs m-auto">
-        {error && <Alert message={error} />}
-        <h1 className="mb-5 text-6xl font-bold animate__animated animate__fadeInUp animate__delay-1s text-white">
-          Movie Project !!!!
+      <div className="w-full max-w-xs m-auto bg-white shadow-lg rounded-xl p-6 animate__animated animate__pulse animate__infinite">
+        <h1 className="text-3xl font-bold text-center text-red-800 mb-4 animate__animated animate__fadeInDown">
+          Nesflitz Movies
         </h1>
+        {error && <Alert message={error} />}
         <form
           onSubmit={handleSubmit}
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          className="space-y-6 animate__animated animate__fadeInUp"
         >
-          <div className="mb-4">
+          <div>
             <label
               htmlFor="email"
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-sm font-medium text-gray-700"
             >
               Email
             </label>
@@ -61,14 +62,14 @@ export function Register() {
               name="email"
               id="email"
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="youremail@company.tld"
             />
           </div>
-          <div className="mb-4">
+          <div>
             <label
               htmlFor="password"
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-sm font-medium text-gray-700"
             >
               Password
             </label>
@@ -77,23 +78,22 @@ export function Register() {
               name="password"
               id="password"
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="*************"
             />
           </div>
-
-          <div className="flex items-center justify-between">
+          <div>
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 animate-spin"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 animate__animated animate__pulse animate__infinite"
               type="submit"
             >
               Register
             </button>
           </div>
         </form>
-        <p className="text-white my-4 text-sm flex justify-between px-3">
-          Already have an Account?
-          <Link to="/login" className="text-blue-700 hover:text-blue-900">
+        <p className="mt-6 text-sm text-center text-gray-500">
+          Already have an account?
+          <Link to="/login" className="text-indigo-600 hover:text-indigo-500">
             Login
           </Link>
         </p>

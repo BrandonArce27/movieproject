@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/authContext";
 import axios from "axios";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { db } from "../firebase";
 import Header from "./Header";
 
@@ -23,6 +23,14 @@ export function Favorites() {
     } catch (error: any) {
       console.error(error.message);
     }
+  };
+
+  const removeFromFavorites = async (id: number) => {
+    const docRef = doc(db, "favorite-movies", user.email);
+    await updateDoc(docRef, {
+      idmovies: arrayRemove(id),
+    });
+    setFavoriteMovies(favoriteMovies.filter((movie) => movie.id !== id));
   };
 
   useEffect(() => {
@@ -77,6 +85,12 @@ export function Favorites() {
                   />
                   <div className="p-4">
                     <h2 className="font-bold text-lg">{movie.title}</h2>
+                    <button
+                      onClick={() => removeFromFavorites(movie.id)}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+                    >
+                      Remove from favorites
+                    </button>
                   </div>
                 </article>
               ))}

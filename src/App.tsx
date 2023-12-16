@@ -5,6 +5,7 @@ import { Register } from "./components/Register";
 import { AuthProvider } from "./context/authContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Favorites } from "./components/Favorites";
+import { Trending } from "./components/Trending";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/trending" element={<Trending />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/register" element={<Register />} />
         </Routes>
