@@ -14,7 +14,7 @@ export function Login() {
   });
 
   const { login, loginWithGoogle } = useAuth();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -113,7 +113,11 @@ export function Login() {
           onClick={handleGoogleSignin}
           className="mt-6 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          Google login
+          <img
+            className="h-6 w-6"
+            src="https://icons-for-free.com/iconfiles/png/512/google+icon-1320192365157611834.png"
+            alt="Google login"
+          />
         </button>
       </div>
     </>
