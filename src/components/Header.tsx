@@ -11,7 +11,7 @@ const Header: React.FC<HeaderProps> = ({ user, handleLogout }) => {
   return (
     <header className="flex flex-col sm:flex-row justify-between items-center bg-black p-4 mb-10 font-poppins">
       <p className="text-white text-xl sm:text-2xl font-bold mr-4">
-        Bienvenido: {user?.displayName || user?.email || "Invitado"}
+        Welcome: {user?.displayName || user?.email || "Invitado"}
       </p>
       <div className="flex flex-col sm:flex-row flex-grow space-y-4 sm:space-y-0 sm:space-x-4">
         <button

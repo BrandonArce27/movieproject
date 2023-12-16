@@ -65,7 +65,7 @@ export function Favorites() {
         <Header user={user} handleLogout={handleLogout} />
         <section>
           <h1 className="text-4xl font-bold text-white text-center mb-5">
-            Peliculas Favoritas
+            Favorite Movies
           </h1>
           {loading ? (
             <div className="flex justify-center items-center">

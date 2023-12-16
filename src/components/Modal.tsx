@@ -36,7 +36,7 @@ const Modal: React.FC<ModalProps> = ({ movie, reviews, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-4 max-w-md max-h-full overflow-auto">
-        <h2 className="font-bold text-xl mb-2">Reseñas</h2>
+        <h2 className="font-bold text-xl mb-2">Reviews</h2>
         {reviews.length > 0 ? (
           reviews.map((review) => (
             <div key={review.id} className="mb-2">
@@ -45,7 +45,7 @@ const Modal: React.FC<ModalProps> = ({ movie, reviews, onClose }) => {
             </div>
           ))
         ) : (
-          <p>No hay reseñas para esta película.</p>
+          <p>No reviews for this movie.</p>
         )}
         <form onSubmit={handleNewReviewSubmit} className="mt-4">
           <textarea
@@ -57,13 +57,14 @@ const Modal: React.FC<ModalProps> = ({ movie, reviews, onClose }) => {
             type="submit"
             className="mr-2 py-1 px-2 bg-blue-500 text-white rounded"
           >
-            Agregar reseña
+            Add Review
           </button>
           <button
+            type="button"
             onClick={onClose}
             className="py-1 px-2 bg-red-500 text-white rounded"
           >
-            Cerrar
+            Close
           </button>
         </form>
       </div>

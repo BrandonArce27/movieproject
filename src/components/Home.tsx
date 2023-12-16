@@ -43,10 +43,9 @@ export function Home() {
   const api_url = "https://api.themoviedb.org/3";
   const image_url = "https://image.tmdb.org/t/p/original";
 
-  //Variables de estado
+  //Variables
   const [movies, setMovies] = React.useState<Movies[]>([]);
   const [search, setSearch] = React.useState("");
-  // const [movie, setMovie] = React.useState<Movies[]>([]); //sirve para cuanbdo se busca una pelicula, lo voy a utilizar para agregar a favoritos posiblemente
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [selectedMovie, setSelectedMovie] = React.useState<Movie | null>(null);
   const [reviews, setReviews] = React.useState<Review[]>([]);
@@ -59,7 +58,7 @@ export function Home() {
       console.error(error.message);
     }
   };
-
+  //fetch de peliculas o search o discover
   const fetchData = async (search: any) => {
     const type = search ? "search" : "discover";
     const {
@@ -141,11 +140,8 @@ export function Home() {
               ...doc.data(),
             } as Review)
         );
-
         setReviews(newReviews);
       });
-
-      // Limpiar la suscripción al desmontar
       return () => unsubscribe();
     }
   }, [selectedMovie]);
@@ -162,22 +158,23 @@ export function Home() {
             className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-md mx-auto transform transition duration-500 hover:scale-105 font-poppins"
           >
             <h2 className="text-2xl font-bold mb-4 text-center">
-              Buscar Película
+              Search Movie{" "}
             </h2>
             <div className="flex w-full">
               <input
+                name="search"
                 type="text"
-                placeholder="Buscar pelicula"
+                placeholder="Search Movie"
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500"
               />
               <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded-r-lg transition duration-300 transform hover:scale-105">
-                Buscar
+                Search
               </button>
             </div>
           </form>
           <h1 className="text-4xl font-bold text-white text-center mb-5 mt-5">
-            Explora las peliculas del momento!!!!!
+            Explore current best movies !!!
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
             {movies.map((items) => {
@@ -194,7 +191,7 @@ export function Home() {
                     />
                   ) : (
                     <div className="w-full h-auto bg-gray-300 flex items-center justify-center text-lg text-gray-700">
-                      Imagen no disponible
+                      Picture not available
                     </div>
                   )}
                   <div className="p-4">
@@ -208,18 +205,18 @@ export function Home() {
                       onClick={() => handleOpenModal(items)}
                       className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
                     >
-                      Agregar/Ver Reseñas
+                      Add/View Review
                     </button>
                     {favoriteMovies.includes(items.id) ? (
                       <button className="mt-2 bg-green-500 text-white font-bold py-2 px-4 rounded">
-                        Película agregada a favoritos
+                        Movie added to favorites
                       </button>
                     ) : (
                       <button
                         onClick={() => addMovieToFavorites(items.id)}
                         className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105"
                       >
-                        Agregar peli a favoritos
+                        Add Movie to Favorites
                       </button>
                     )}
                   </div>

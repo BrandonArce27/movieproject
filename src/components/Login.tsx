@@ -14,7 +14,7 @@ export function Login() {
   });
 
   const { login, loginWithGoogle } = useAuth();
-  const navigate = useNavigate(); // this is a hook from react-router-dom
+  const navigate = useNavigate(); 
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {

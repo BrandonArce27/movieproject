@@ -46,11 +46,9 @@ const Rating: React.FC<RatingProps> = ({ movieId }) => {
 
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
-      // Document exists, update it
       const docRef = doc(db, "ratings", querySnapshot.docs[0].id);
       await updateDoc(docRef, { rating: ratingValue });
     } else {
-      // Document does not exist, create it
       await addDoc(collection(db, "ratings"), {
         movieId: movieId,
         userEmail: auth.currentUser?.email,
