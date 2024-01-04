@@ -115,7 +115,7 @@ export function Login() {
         >
           <img
             className="h-6 w-6"
-            src="https://icons-for-free.com/iconfiles/png/512/google+icon-1320192365157611834.png"
+            src="https://image.similarpng.com/very-thumbnail/2020/06/Logo-google-icon-PNG.png"
             alt="Google login"
           />
         </button>
